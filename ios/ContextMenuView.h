@@ -13,6 +13,10 @@
 @interface ContextMenuView : UIView<UIContextMenuInteractionDelegate>
 
 @property (nonnull, nonatomic, copy) NSString* title;
+@property (nonatomic, copy) NSString* previewController;
+@property (nonatomic, copy) NSDictionary* previewControllerProperties;
+@property (nonatomic, assign) NSInteger previewControllerHeight;
+@property (nonatomic, assign) NSInteger previewControllerWidth;
 @property (nullable, nonatomic, copy) RCTBubblingEventBlock onPress;
 @property (nullable, nonatomic, copy) RCTBubblingEventBlock onCancel;
 @property (nullable, nonatomic, copy) NSArray<ContextMenuAction*>* actions;
