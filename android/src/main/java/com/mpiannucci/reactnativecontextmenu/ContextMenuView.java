@@ -1,46 +1,29 @@
 package com.mpiannucci.reactnativecontextmenu;
 
 import android.content.Context;
-import android.gesture.Gesture;
-import android.util.Log;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.touch.OnInterceptTouchEventListener;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.facebook.react.views.view.ReactViewGroup;
-
-import java.util.List;
 
 import javax.annotation.Nullable;
 
 public class ContextMenuView extends ReactViewGroup implements PopupMenu.OnMenuItemClickListener, PopupMenu.OnDismissListener {
-
-    public class Action {
-        String title;
-        boolean disabled;
-
-        public Action(String title, boolean disabled) {
-            this.title = title;
-            this.disabled = disabled;
-        }
-    }
-
     PopupMenu contextMenu;
-
     GestureDetector gestureDetector;
-
     boolean cancelled = true;
 
     public ContextMenuView(final Context context) {
@@ -82,8 +65,15 @@ public class ContextMenuView extends ReactViewGroup implements PopupMenu.OnMenuI
 
         for (int i = 0; i < actions.size(); i++) {
             ReadableMap action = actions.getMap(i);
-            int order = i;
-            menu.add(Menu.NONE, Menu.NONE, order, action.getString("title"));
+
+            menu.add(Menu.NONE, Menu.NONE, i, action.getString("title"));
+
+            if (action.getBoolean("destructive")) {
+                SpannableString s = new SpannableString(action.getString("title"));
+                s.setSpan(new ForegroundColorSpan(Color.rgb(255, 59, 48)), 0, s.length(), 0);
+                menu.getItem(i).setTitle(s);
+            }
+
             menu.getItem(i).setEnabled(!action.hasKey("disabled") || !action.getBoolean("disabled"));
         }
     }
